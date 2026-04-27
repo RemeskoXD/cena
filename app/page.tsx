@@ -102,7 +102,7 @@ export default function Home() {
         <Section
           id="rozpad"
           title="Rozpad ceny"
-          subtitle="Moduly = produktové části; vrstvy = jak bych si rozvrhl rizika a čas napříč celým projektem (spec → data → API → UI → integrace → bezpečnost → testy → předání). Pod přepínačem je řádkový rozklad po modulech. Součet všude 520 000 Kč."
+          subtitle="Nahoře přepínač: moduly = produktové bloky dle sitmapy, vrstvy = fáze od specifikace k předání. Pod ním se mění i podrobný řádkový rozklad (růžový blok). Oba výřezy i všechny karty sčítají na 520 000 Kč."
         >
           <Breakdown />
         </Section>

@@ -79,7 +79,7 @@ export function Breakdown() {
         ))}
       </div>
 
-      <DetailedBreakdown />
+      <DetailedBreakdown key={mode} mode={mode} />
     </div>
   );
 }

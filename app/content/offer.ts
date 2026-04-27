@@ -21,6 +21,13 @@ export type DetailedBreakdownGroup = {
   items: DetailedLineItem[];
 };
 
+export type DetailedLayerBreakdownGroup = {
+  id: string;
+  layerId: string;
+  title: string;
+  items: DetailedLineItem[];
+};
+
 export type ApiEndpointGroup = {
   title: string;
   endpoints: string[];
@@ -74,6 +81,7 @@ export const OFFER = {
     bullets: [
       "Fixní cena 520 000 Kč bez DPH za dodání MVP aplikace (web + eshop + admin + klient + affiliate + trezor).",
       "Rozpad ceny odpovídá tomu, jak bych projekt reálně skládal ve spolupráci s vámi: nejdřív společná spec a datový model, pak backend a rozhraní po milnících, integrace zvlášť, nakonec testy a předání (viz moduly i vrstvy níže).",
+      "Pod karty s rozpadem jsou dva doplňující se řádkové rozpady (přepínač moduly / vrstev): dle produktu nebo dle fází (Spec → Předání); u řádků orientační částky, součet 520 000 Kč.",
       "Součást MVP jsou integrace: Google přihlášení (OAuth) a Fio bank API (sync transakcí + základní párování).",
       "Hosting aplikace (OVHcloud), databázi i e‑mail zajišťuje dodavatel; doménu/DNS typicky zajišťuje klient (dle dohody).",
       "Google OAuth je společně: realizace a nastavení v rámci projektu, následně může běžet na Google projektu klienta.",
@@ -230,84 +238,222 @@ export const OFFER = {
       },
     ] satisfies BreakdownItem[],
 
-    /** Stejná fixní cena, rozpadnutá na menší kroky podle modulů (součet = 520 000 Kč). */
+    /**
+     * Podrobný rozklad dle produktových modulů (dle sitmapy / podkladů).
+     * Součet skupin = 520 000 Kč.
+     */
     detailed: [
       {
         id: "web-detail",
         moduleId: "web",
-        title: "Marketingový web",
+        title: "Vstupní web / služby",
         items: [
-          { id: "web-1", label: "Kostra layoutu, navigace, patička (první společný náhled)", amountCzk: 11_000 },
-          { id: "web-2", label: "Hero, CTA, produktové a benefitní bloky", amountCzk: 11_000 },
-          { id: "web-3", label: "Reference, bezpečnost, FAQ (obsah doladíme s vámi)", amountCzk: 12_000 },
-          { id: "web-4", label: "Responzivita napříč breakpointy", amountCzk: 10_000 },
-          { id: "web-5", label: "SEO základ (meta, struktura, sitemap rozumně)", amountCzk: 10_000 },
-          { id: "web-6", label: "Konfigurovatelné bloky / napojení textů", amountCzk: 8_000 },
+          { id: "web-1", label: "HERO + primární CTA", amountCzk: 9_000 },
+          { id: "web-2", label: "Investiční produkty, služby, výhody (strukturované bloky)", amountCzk: 9_000 },
+          { id: "web-3", label: "Bezpečnost investic, důvěryhodnost, sociální důkaz", amountCzk: 8_000 },
+          { id: "web-4", label: "Náhled platformy, O nás / tým (MVP rozsah)", amountCzk: 8_000 },
+          { id: "web-5", label: "FAQ, závěrečné CTA", amountCzk: 7_000 },
+          { id: "web-6", label: "Globální layout, navigace, patička", amountCzk: 7_000 },
+          { id: "web-7", label: "Responzivita (mobil–desktop), breakpointy", amountCzk: 7_000 },
+          { id: "web-8", label: "SEO základ + konfigurovatelné obsahové bloky / texty", amountCzk: 7_000 },
         ],
       },
       {
         id: "eshop-detail",
         moduleId: "eshop",
-        title: "Eshop",
+        title: "Eshop (investiční kovy)",
         items: [
-          { id: "es-1", label: "Katalog: list, řazení, stránkování", amountCzk: 25_000 },
-          { id: "es-2", label: "Detail produktu včetně stavů načítání / chyb", amountCzk: 17_000 },
-          { id: "es-3", label: "Košík: session, ceny, validace", amountCzk: 14_000 },
-          { id: "es-4", label: "Checkout a potvrzení (MVP, hrany stavů)", amountCzk: 20_000 },
-          { id: "es-5", label: "Klient + API: produkty, ceny, objednávky", amountCzk: 12_000 },
+          { id: "es-1", label: "Katalog: kovy, typ, váha, dostupnost, stránkování", amountCzk: 22_000 },
+          { id: "es-2", label: "Detail produktu (mince/slitky) + stavy načítání", amountCzk: 12_000 },
+          { id: "es-3", label: "Tržní ceny v produktu, přepočet, vazba na zdroj (MVP)", amountCzk: 16_000 },
+          { id: "es-4", label: "Košík, validace, práce s cenou", amountCzk: 12_000 },
+          { id: "es-5", label: "Nákupní proces: fixace ceny, objednávka, potvrzení (MVP)", amountCzk: 20_000 },
+          { id: "es-6", label: "Historie / stav objednávky (klientská strana, MVP)", amountCzk: 6_000 },
         ],
       },
       {
         id: "admin-detail",
         moduleId: "admin",
-        title: "Admin panel",
+        title: "Admin panel (provoz platformy)",
         items: [
-          { id: "ad-1", label: "Dashboard a klíčové metriky", amountCzk: 17_000 },
-          { id: "ad-2", label: "Produkty: CRUD, kategorie, média (MVP)", amountCzk: 22_000 },
-          { id: "ad-3", label: "Ceny: tržní data, import, historie", amountCzk: 19_000 },
-          { id: "ad-4", label: "Objednávky: stavy, detail, exporty", amountCzk: 17_000 },
-          { id: "ad-5", label: "Uživatelé, role, audit", amountCzk: 18_000 },
-          { id: "ad-6", label: "Obrazovky integrací (OAuth, Fio – konfigurace MVP)", amountCzk: 13_000 },
-          { id: "ad-7", label: "Systém: logy, notifikace, základní nastavení", amountCzk: 12_000 },
+          { id: "ad-1", label: "Dashboard: přehled objednávek, tržeb, reg., uživatelů, affil, statistiky kovů", amountCzk: 17_000 },
+          { id: "ad-2", label: "Správa produktů: CRUD, kategorie, sklad, marže, obrázky, popisy", amountCzk: 15_000 },
+          { id: "ad-3", label: "Správa cen: vazba na zdroj, marže, ruční zásah, historie, log změn", amountCzk: 12_000 },
+          { id: "ad-4", label: "Správa objednávek: filtry, stavy, platby, detail, export (MVP)", amountCzk: 12_000 },
+          { id: "ad-5", label: "Správa uživatelů: účet, blokace, reset, historie nákupů, vazba na úschovu", amountCzk: 10_000 },
+          { id: "ad-6", label: "Affiliate správa: partneři, kódy, tracking, provize, manuál, export", amountCzk: 10_000 },
+          { id: "ad-7", label: "Vault / úschova (admin): přehled, kapacita, přiřazení kovů, historie", amountCzk: 10_000 },
+          { id: "ad-8", label: "Integrace: monitoring API, chyby, sync, zdraví napojení (MVP)", amountCzk: 7_000 },
+          { id: "ad-9", label: "Systémové a audit logy, historie operací", amountCzk: 6_000 },
+          { id: "ad-10", label: "Nastavení: marže, provize affil, obchodní podmínky, šablony e‑mailů (MVP)", amountCzk: 7_000 },
+          { id: "ad-11", label: "Notifikace: objednávky, registrace, affiliate (základ v adminu)", amountCzk: 6_000 },
+          { id: "ad-12", label: "Obrazovky OAuth a bankovního napojení (Fio) – konfigurace MVP", amountCzk: 6_000 },
         ],
       },
       {
         id: "client-detail",
         moduleId: "client",
-        title: "Klient panel",
+        title: "Klient panel (investor)",
         items: [
-          { id: "cl-1", label: "Dashboard: metriky, grafy, KPI (ladění s reálnými daty)", amountCzk: 26_000 },
-          { id: "cl-2", label: "Portfolio a investice (jádro klientské hodnoty)", amountCzk: 35_000 },
-          { id: "cl-3", label: "Objednávky a tracking doporučení", amountCzk: 14_000 },
-          { id: "cl-4", label: "Profil, dokumenty, bezpečnost", amountCzk: 22_000 },
-          { id: "cl-5", label: "Trezor (klient): klíče, historie, exporty", amountCzk: 14_000 },
-          { id: "cl-6", label: "Provize, výplaty, portálové statistiky", amountCzk: 17_000 },
-          { id: "cl-7", label: "Přihlášení / OAuth UI flow", amountCzk: 10_000 },
+          { id: "cl-1", label: "Dashboard: portfolio, hodnota, transakce, rychlé akce (MVP)", amountCzk: 20_000 },
+          { id: "cl-2", label: "Moje investice: držené kovy, váha, nákup vs. tržní hodnota (MVP)", amountCzk: 32_000 },
+          { id: "cl-3", label: "Historie objednávek (seznam, stav, detail)", amountCzk: 8_000 },
+          { id: "cl-4", label: "Vault / úschova: seznam, množství, celkový přehled (MVP)", amountCzk: 12_000 },
+          { id: "cl-5", label: "Profil, dokumenty (Smlouvy, EULA, investiční podklady dle rozsahu)", amountCzk: 10_000 },
+          { id: "cl-6", label: "Bezpečnost účtu: heslo, ověření, 2FA, historie přihlášení (MVP)", amountCzk: 14_000 },
+          { id: "cl-7", label: "Notifikace (stavy objednávek, affiliate)", amountCzk: 4_000 },
+          { id: "cl-8", label: "Výplata provizí, portálové statistiky, referral výkon (MVP)", amountCzk: 20_000 },
+          { id: "cl-9", label: "Tracking doporučení, přehledy", amountCzk: 12_000 },
+          { id: "cl-10", label: "Přihlášení / OAuth UI", amountCzk: 6_000 },
         ],
       },
       {
         id: "affiliate-detail",
         moduleId: "affiliate",
-        title: "Affiliate",
+        title: "Affiliate prostředí",
         items: [
-          { id: "af-1", label: "Onboarding partnera (registrace, přístup)", amountCzk: 11_000 },
-          { id: "af-2", label: "Referral odkazy a měření konverzí", amountCzk: 17_000 },
-          { id: "af-3", label: "Provize, stavy, payout přehled", amountCzk: 14_000 },
-          { id: "af-4", label: "Partnerské přehledy a statistiky (MVP)", amountCzk: 10_000 },
+          { id: "af-1", label: "Registrace, aktivace účtu, souhlas, generování kódu", amountCzk: 8_000 },
+          { id: "af-2", label: "Referral odkazy, kódy, sdílení (MVP)", amountCzk: 6_000 },
+          { id: "af-3", label: "Tracking doporučení, evidence registrovaných klientů (MVP)", amountCzk: 12_000 },
+          { id: "af-4", label: "Provizní pravidla, kalkulace, historie (MVP)", amountCzk: 10_000 },
+          { id: "af-5", label: "Statistiky partnera, přehled transakcí (MVP)", amountCzk: 8_000 },
+          { id: "af-6", label: "Výplaty, exporty, affil dashboard (rychlé souhrny)", amountCzk: 8_000 },
         ],
       },
       {
         id: "vault-detail",
         moduleId: "vault",
-        title: "Trezor (úschova)",
+        title: "Funkce trezoru (úschova)",
         items: [
-          { id: "vt-1", label: "Model klíčů, práva, audit (návrh + implementace)", amountCzk: 17_000 },
-          { id: "vt-2", label: "Historie operací a konzistence dat", amountCzk: 16_000 },
-          { id: "vt-3", label: "Přehled majetku", amountCzk: 14_000 },
-          { id: "vt-4", label: "Exporty a reporty (MVP)", amountCzk: 15_000 },
+          { id: "vt-1", label: "Evidence kovů: slitky/ingoty, identifikace, vazba na majitele (MVP)", amountCzk: 18_000 },
+          { id: "vt-2", label: "Přehled majetku: celkem v úschově, hodnota (MVP)", amountCzk: 14_000 },
+          { id: "vt-3", label: "Správa úschovy: stavy, dostupnost, sklad (MVP)", amountCzk: 12_000 },
+          { id: "vt-4", label: "Historie operací: vklad, výběr, pohyby", amountCzk: 10_000 },
+          { id: "vt-5", label: "Exporty, reporty (MVP formáty)", amountCzk: 8_000 },
         ],
       },
     ] satisfies DetailedBreakdownGroup[],
+
+    /**
+     * Stejná fixní cena rozpadnutá na fáze „spec → … → předání“ (řádkový rozklad u přepínače Vrstvy).
+     * Součet skupin = 520 000 Kč, soulad s byLayer.
+     */
+    detailedByLayer: [
+      {
+        id: "layer-spec",
+        layerId: "analysis",
+        title: "Spec (společná příprava, backlog)",
+        items: [
+          { id: "l-an-1", label: "Discovery workshopy, hranice MVP, prioritizace backlogu", amountCzk: 12_000 },
+          { id: "l-an-2", label: "Use-cases, akceptační scénáře (k čemu je UAT)", amountCzk: 10_000 },
+          { id: "l-an-3", label: "Seskupení funkcí dle modulů (soulad s podklady / sitmapou)", amountCzk: 8_000 },
+          { id: "l-an-4", label: "Matic role × oprávnění (základ pro RBAC)", amountCzk: 8_000 },
+          { id: "l-an-5", label: "Návrh API domén a hranic mezi moduly", amountCzk: 10_000 },
+          { id: "l-an-6", label: "Koncept datového modelu (entit) před implementací", amountCzk: 6_000 },
+          { id: "l-an-7", label: "Průběžné schůzky, rozhodnutí, zápis změn (mini PM v ceně)", amountCzk: 8_000 },
+        ],
+      },
+      {
+        id: "layer-dsgn",
+        layerId: "uxui",
+        title: "Návrh (UX / UI)",
+        items: [
+          { id: "l-ux-1", label: "Wireframy: eshop a kritický checkout flow", amountCzk: 10_000 },
+          { id: "l-ux-2", label: "Wireframy: admin (hlavní pracovní plochy)", amountCzk: 12_000 },
+          { id: "l-ux-3", label: "Wireframy: klient + affiliate (dashboardy)", amountCzk: 8_000 },
+          { id: "l-ux-4", label: "Design systém: typografie, barvy, knihovna komponent (MVP)", amountCzk: 8_000 },
+          { id: "l-ux-5", label: "Responzivní pravidla, stavy (loading, empty, chyby)", amountCzk: 8_000 },
+        ],
+      },
+      {
+        id: "layer-data",
+        layerId: "db",
+        title: "Data (Postgres, migrace)",
+        items: [
+          { id: "l-db-1", label: "Jádro: uživatelé, role, permissions, session", amountCzk: 8_000 },
+          { id: "l-db-2", label: "Obchod: produkty, kategorie, ceny, historie, objednávky", amountCzk: 12_000 },
+          { id: "l-db-3", label: "Investice, portfolio, snímky hodnot (MVP agregace)", amountCzk: 6_000 },
+          { id: "l-db-4", label: "Affiliate: partneři, referral, provize, výplaty", amountCzk: 5_000 },
+          { id: "l-db-5", label: "Trezor: evidence kovů/klíčů, operace, exporty", amountCzk: 5_000 },
+          { id: "l-db-6", label: "Banka: Fio spojení, transakce, párování (MVP tabulky)", amountCzk: 4_000 },
+          { id: "l-db-7", label: "Migrace, seed, indexy, základ výkonu", amountCzk: 4_000 },
+        ],
+      },
+      {
+        id: "layer-api",
+        layerId: "backend",
+        title: "API a business logika (Node.js)",
+        items: [
+          { id: "l-be-1", label: "Autentizace, session/JWT, napojení na role", amountCzk: 14_000 },
+          { id: "l-be-2", label: "Doména produkty, katalog, ceník (MVP pravidla)", amountCzk: 14_000 },
+          { id: "l-be-3", label: "Ceny: import tržních dat, historie, validace (MVP)", amountCzk: 12_000 },
+          { id: "l-be-4", label: "Objednávky, košík, stavový stroj, napojení na platby (MVP)", amountCzk: 18_000 },
+          { id: "l-be-5", label: "Admin: agregace přehledů, CRUD napříč entitami (MVP)", amountCzk: 20_000 },
+          { id: "l-be-6", label: "Klientské investice, portfolio, reporty (MVP)", amountCzk: 14_000 },
+          { id: "l-be-7", label: "Affiliate: výpočty, stavy, výpisy (MVP)", amountCzk: 10_000 },
+          { id: "l-be-8", label: "Trezor: pravidla přístupu, operace, audit (MVP)", amountCzk: 10_000 },
+          { id: "l-be-9", label: "Notifikace, exporty souborů (MVP rozsah)", amountCzk: 8_000 },
+          { id: "l-be-10", label: "Fio: sync, párování transakcí, hrany chyb (MVP)", amountCzk: 12_000 },
+        ],
+      },
+      {
+        id: "layer-ui",
+        layerId: "frontend",
+        title: "UI (Next.js – všechny portály)",
+        items: [
+          { id: "l-fe-1", label: "Vstupní web (sekce dle sitmapy)", amountCzk: 14_000 },
+          { id: "l-fe-2", label: "Eshop: katalog, detail, košík, checkout (MVP stavy UI)", amountCzk: 28_000 },
+          { id: "l-fe-3", label: "Admin: plochy správy (nejširší plocha)", amountCzk: 32_000 },
+          { id: "l-fe-4", label: "Klient: portfolio, investice, úschova, profil (MVP)", amountCzk: 22_000 },
+          { id: "l-fe-5", label: "Affiliate: onboarding, linky, statistiky, výplaty (MVP)", amountCzk: 10_000 },
+          { id: "l-fe-6", label: "Společné: formuláře, validace, chybové stavy, načítání", amountCzk: 8_000 },
+        ],
+      },
+      {
+        id: "layer-int",
+        layerId: "integrations",
+        title: "Integrace (MVP)",
+        items: [
+          { id: "l-in-1", label: "Tržní ceny: import, plánovaný job, edge cases (MVP)", amountCzk: 12_000 },
+          { id: "l-in-2", label: "Transakční e‑mail (šablony, odeslání, příjem bounce – základ)", amountCzk: 8_000 },
+          { id: "l-in-3", label: "Google OAuth: app, redirect URI, vazba na účet", amountCzk: 14_000 },
+          { id: "l-in-4", label: "Fio: tokeny, sync, idempotence volání, základ párování", amountCzk: 12_000 },
+          { id: "l-in-5", label: "Exporty CSV/PDF dle dohodnutých míst (MVP)", amountCzk: 8_000 },
+        ],
+      },
+      {
+        id: "layer-sec",
+        layerId: "security",
+        title: "Bezpečnost",
+        items: [
+          { id: "l-sy-1", label: "Ukládání hesel, pravidla síly, reset (MVP)", amountCzk: 6_000 },
+          { id: "l-sy-2", label: "Session / JWT, expirace, obnova", amountCzk: 6_000 },
+          { id: "l-sy-3", label: "Hardening API: rate limit, validace payloadů, konzistentní chyby", amountCzk: 8_000 },
+          { id: "l-sy-4", label: "Audit: co se loguje u citlivých akcí (admin, trezor, platby)", amountCzk: 6_000 },
+          { id: "l-sy-5", label: "OAuth: bezpečné redirecty, ochrana tokenů (MVP)", amountCzk: 8_000 },
+        ],
+      },
+      {
+        id: "layer-qa",
+        layerId: "qa",
+        title: "Testy a UAT",
+        items: [
+          { id: "l-qa-1", label: "Smoke a regrese před milníky (kritické flow)", amountCzk: 8_000 },
+          { id: "l-qa-2", label: "Příprava a průběh UAT s vámi, zápis neshod", amountCzk: 8_000 },
+          { id: "l-qa-3", label: "Opravy v rámci MVP, stabilizace před akceptací", amountCzk: 8_000 },
+        ],
+      },
+      {
+        id: "layer-hand",
+        layerId: "devops",
+        title: "Předání (CI, nasazení, provoz)",
+        items: [
+          { id: "l-do-1", label: "CI: build, lint, základ kvality při každém merge", amountCzk: 3_000 },
+          { id: "l-do-2", label: "Env, šablony, stručný runbook (jak nasadit, co kde nastavit)", amountCzk: 2_000 },
+          { id: "l-do-3", label: "OVHcloud, DB přístup, zálohy; e‑mail DNS checklist (SPF/DKIM/DMARC)", amountCzk: 5_000 },
+        ],
+      },
+    ] satisfies DetailedLayerBreakdownGroup[],
 
     /** Vrstvy: jak bych si rozvrhl čas a rizika napříč celým projektem (součet = 520 000 Kč). */
     byLayer: [
