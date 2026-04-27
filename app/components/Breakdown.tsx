@@ -7,6 +7,7 @@ import { formatCzk } from "@/app/lib/money";
 import { percent, sum } from "@/app/lib/math";
 import { Badge } from "@/app/components/Badge";
 import { Tabs } from "@/app/components/Tabs";
+import { DetailedBreakdown } from "@/app/components/DetailedBreakdown";
 
 type Mode = "modules" | "layers";
 
@@ -77,6 +78,8 @@ export function Breakdown() {
           <Row key={it.id} item={it} total={total} />
         ))}
       </div>
+
+      <DetailedBreakdown />
     </div>
   );
 }

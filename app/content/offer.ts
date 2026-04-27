@@ -7,6 +7,20 @@ export type BreakdownItem = {
   includes: string[];
 };
 
+/** Drobný řádkový rozklad uvnitř modulu (součet = amountCzk dané skupiny). */
+export type DetailedLineItem = {
+  id: string;
+  label: string;
+  amountCzk: MoneyCZK;
+};
+
+export type DetailedBreakdownGroup = {
+  id: string;
+  moduleId: string;
+  title: string;
+  items: DetailedLineItem[];
+};
+
 export type ApiEndpointGroup = {
   title: string;
   endpoints: string[];
@@ -59,7 +73,7 @@ export const OFFER = {
   executiveSummary: {
     bullets: [
       "Fixní cena 520 000 Kč bez DPH za dodání MVP aplikace (web + eshop + admin + klient + affiliate + trezor).",
-      "Rozpad ceny je transparentně vypsaný dle modulů i dle technických vrstev (včetně API).",
+      "Rozpad ceny odpovídá tomu, jak bych projekt reálně skládal ve spolupráci s vámi: nejdřív společná spec a datový model, pak backend a rozhraní po milnících, integrace zvlášť, nakonec testy a předání (viz moduly i vrstvy níže).",
       "Součást MVP jsou integrace: Google přihlášení (OAuth) a Fio bank API (sync transakcí + základní párování).",
       "Hosting aplikace (OVHcloud), databázi i e‑mail zajišťuje dodavatel; doménu/DNS typicky zajišťuje klient (dle dohody).",
       "Google OAuth je společně: realizace a nastavení v rámci projektu, následně může běžet na Google projektu klienta.",
@@ -154,178 +168,239 @@ export const OFFER = {
   },
 
   pricing: {
+    /** Moduly: jak bych váhu rozdal mezi produktové části (součet = 520 000 Kč). */
     byModule: [
       {
         id: "web",
         title: "Marketingový web",
-        amountCzk: 70_000,
+        amountCzk: 62_000,
         includes: [
-          "UI sekce (hero, produkty, výhody, reference, bezpečnost, FAQ, CTA)",
-          "Responzivita + základní SEO",
-          "Napojení na obsahové bloky (konfigurovatelné)",
+          "Beru to jako rychlé iterace s vámi: nejdřív kostra sekcí, pak doladění obsahu a vizuálu přímo v prohlížeči",
+          "Hero až FAQ, responzivita, základní SEO",
+          "Obsah zůstane čitelně strukturovaný (konfigurace bloků, ne „zabetonovaný“ v kódu)",
         ],
       },
       {
         id: "eshop",
         title: "Eshop",
-        amountCzk: 80_000,
+        amountCzk: 88_000,
         includes: [
-          "Katalog produktů + detail",
-          "Košík + objednávkový flow (MVP)",
-          "Napojení na API pro produkty/ceny/objednávky",
+          "Katalog a detail jako první prodejní priorita",
+          "Košík a checkout v MVP — nejvíc rizik, nejvíc pozornosti (stav objednávky, chyby, hrany)",
+          "Napojení na API (produkty, ceny, objednávky) srozumitelné pro uživatele i pro admin",
         ],
       },
       {
         id: "admin",
         title: "Admin panel",
-        amountCzk: 120_000,
+        amountCzk: 118_000,
         includes: [
-          "Dashboard + metriky",
-          "Správa produktů/cen/objednávek",
-          "Správa uživatelů/rolí + audit",
-          "Základní správa integračních nastavení (OAuth, bankovní napojení) v MVP režimu",
+          "Dashboard a metriky jako přehled provozu, ne jen ozdoba",
+          "CRUD produktů, cen, objednávek — stavové stroje a exporty, které opravdu použijete",
+          "Uživatelé, role, audit; obrazovky pro OAuth a banku v rozumném MVP rozsahu",
         ],
       },
       {
         id: "client",
         title: "Klient panel",
-        amountCzk: 140_000,
+        amountCzk: 138_000,
         includes: [
-          "Dashboard investora + grafy",
-          "Moje investice + historie",
-          "Profil + bezpečnost + dokumenty (MVP rozsah)",
-          "Přihlášení přes Google (OAuth) – pokud bude zvoleno jako primární/sekundární metoda",
+          "Největší unikátní vrstva: dashboard, portfolio, investice — ladíme s reálnými daty a vaší terminologií",
+          "Objednávky, tracking, profil, dokumenty (MVP)",
+          "Trezor z pohledu klienta + výplaty provizí a souhrnné statistiky",
         ],
       },
       {
         id: "affiliate",
         title: "Affiliate prostředí",
-        amountCzk: 60_000,
+        amountCzk: 52_000,
         includes: [
-          "Registrace partnera + přihlášení",
-          "Referral odkazy + tracking",
-          "Provize + přehled payoutů",
+          "Registrace a přístup partnera bez zbytečné složitosti",
+          "Referral + měření; provize a payout přehledně",
         ],
       },
       {
         id: "vault",
         title: "Trezor (úschova)",
-        amountCzk: 50_000,
+        amountCzk: 62_000,
         includes: [
-          "Evidence klíčů + oprávnění",
-          "Historie operací + exporty",
-          "Přehled majetku (MVP)",
+          "Citlivá doména: evidence klíčů, práva, auditní stopa",
+          "Historie operací, přehled majetku, exporty v MVP rozsahu",
         ],
       },
     ] satisfies BreakdownItem[],
 
+    /** Stejná fixní cena, rozpadnutá na menší kroky podle modulů (součet = 520 000 Kč). */
+    detailed: [
+      {
+        id: "web-detail",
+        moduleId: "web",
+        title: "Marketingový web",
+        items: [
+          { id: "web-1", label: "Kostra layoutu, navigace, patička (první společný náhled)", amountCzk: 11_000 },
+          { id: "web-2", label: "Hero, CTA, produktové a benefitní bloky", amountCzk: 11_000 },
+          { id: "web-3", label: "Reference, bezpečnost, FAQ (obsah doladíme s vámi)", amountCzk: 12_000 },
+          { id: "web-4", label: "Responzivita napříč breakpointy", amountCzk: 10_000 },
+          { id: "web-5", label: "SEO základ (meta, struktura, sitemap rozumně)", amountCzk: 10_000 },
+          { id: "web-6", label: "Konfigurovatelné bloky / napojení textů", amountCzk: 8_000 },
+        ],
+      },
+      {
+        id: "eshop-detail",
+        moduleId: "eshop",
+        title: "Eshop",
+        items: [
+          { id: "es-1", label: "Katalog: list, řazení, stránkování", amountCzk: 25_000 },
+          { id: "es-2", label: "Detail produktu včetně stavů načítání / chyb", amountCzk: 17_000 },
+          { id: "es-3", label: "Košík: session, ceny, validace", amountCzk: 14_000 },
+          { id: "es-4", label: "Checkout a potvrzení (MVP, hrany stavů)", amountCzk: 20_000 },
+          { id: "es-5", label: "Klient + API: produkty, ceny, objednávky", amountCzk: 12_000 },
+        ],
+      },
+      {
+        id: "admin-detail",
+        moduleId: "admin",
+        title: "Admin panel",
+        items: [
+          { id: "ad-1", label: "Dashboard a klíčové metriky", amountCzk: 17_000 },
+          { id: "ad-2", label: "Produkty: CRUD, kategorie, média (MVP)", amountCzk: 22_000 },
+          { id: "ad-3", label: "Ceny: tržní data, import, historie", amountCzk: 19_000 },
+          { id: "ad-4", label: "Objednávky: stavy, detail, exporty", amountCzk: 17_000 },
+          { id: "ad-5", label: "Uživatelé, role, audit", amountCzk: 18_000 },
+          { id: "ad-6", label: "Obrazovky integrací (OAuth, Fio – konfigurace MVP)", amountCzk: 13_000 },
+          { id: "ad-7", label: "Systém: logy, notifikace, základní nastavení", amountCzk: 12_000 },
+        ],
+      },
+      {
+        id: "client-detail",
+        moduleId: "client",
+        title: "Klient panel",
+        items: [
+          { id: "cl-1", label: "Dashboard: metriky, grafy, KPI (ladění s reálnými daty)", amountCzk: 26_000 },
+          { id: "cl-2", label: "Portfolio a investice (jádro klientské hodnoty)", amountCzk: 35_000 },
+          { id: "cl-3", label: "Objednávky a tracking doporučení", amountCzk: 14_000 },
+          { id: "cl-4", label: "Profil, dokumenty, bezpečnost", amountCzk: 22_000 },
+          { id: "cl-5", label: "Trezor (klient): klíče, historie, exporty", amountCzk: 14_000 },
+          { id: "cl-6", label: "Provize, výplaty, portálové statistiky", amountCzk: 17_000 },
+          { id: "cl-7", label: "Přihlášení / OAuth UI flow", amountCzk: 10_000 },
+        ],
+      },
+      {
+        id: "affiliate-detail",
+        moduleId: "affiliate",
+        title: "Affiliate",
+        items: [
+          { id: "af-1", label: "Onboarding partnera (registrace, přístup)", amountCzk: 11_000 },
+          { id: "af-2", label: "Referral odkazy a měření konverzí", amountCzk: 17_000 },
+          { id: "af-3", label: "Provize, stavy, payout přehled", amountCzk: 14_000 },
+          { id: "af-4", label: "Partnerské přehledy a statistiky (MVP)", amountCzk: 10_000 },
+        ],
+      },
+      {
+        id: "vault-detail",
+        moduleId: "vault",
+        title: "Trezor (úschova)",
+        items: [
+          { id: "vt-1", label: "Model klíčů, práva, audit (návrh + implementace)", amountCzk: 17_000 },
+          { id: "vt-2", label: "Historie operací a konzistence dat", amountCzk: 16_000 },
+          { id: "vt-3", label: "Přehled majetku", amountCzk: 14_000 },
+          { id: "vt-4", label: "Exporty a reporty (MVP)", amountCzk: 15_000 },
+        ],
+      },
+    ] satisfies DetailedBreakdownGroup[],
+
+    /** Vrstvy: jak bych si rozvrhl čas a rizika napříč celým projektem (součet = 520 000 Kč). */
     byLayer: [
       {
         id: "analysis",
-        title: "Analýza + specifikace",
-        amountCzk: 50_000,
+        title: "Společná příprava (specifikace & backlog)",
+        amountCzk: 62_000,
         includes: [
-          "Upřesnění scope (MVP) + use-cases",
-          "Návrh rolí a oprávnění",
-          "Definice API domén a datového modelu",
+          "Workshopy / krátké smyčky: use-cases, MVP hranice, co je až po spuštění",
+          "Role a oprávnění zapsané tak, aby z toho šlo rovnou stavět RBAC",
+          "API domény + datový model — nejdřív papír (nebo doc), pak teprve masivní kód",
+          "Průběžná synchronizace a rozhodnutí (včetně „mini PM“ v rámci dodávky)",
         ],
       },
       {
         id: "uxui",
-        title: "UX/UI návrh",
-        amountCzk: 50_000,
+        title: "UX/UI (wireframy → design systém)",
+        amountCzk: 46_000,
         includes: [
-          "Wireframy klíčových obrazovek",
-          "Design systém (typografie, barvy, komponenty)",
-          "Responzivní chování",
-        ],
-      },
-      {
-        id: "frontend",
-        title: "Frontend (Next.js)",
-        amountCzk: 120_000,
-        includes: [
-          "Marketing web + Eshop UI",
-          "Admin/klient/affiliate UI",
-          "Stavové obrazovky, formuláře, validace",
-          "OAuth flow obrazovky (login / error / callback) v MVP podobě",
-        ],
-      },
-      {
-        id: "backend",
-        title: "Backend + API (Node.js)",
-        amountCzk: 130_000,
-        includes: [
-          "REST API (auth, produkty, ceny, objednávky, trezor, affiliate)",
-          "Autorizace (RBAC) + audit logy",
-          "Notifikace (základ) + exporty (MVP)",
-          "OAuth provider integrace (Google) + bankovní sync job (Fio) v MVP rozsahu",
+          "Wireframy rizikových flow (eshop, admin, klient)",
+          "Design systém v míře potřebné pro MVP (ne galerie pro galerii)",
+          "Responzivní pravidla, aby FE neřešil každou obrazovku od nuly",
         ],
       },
       {
         id: "db",
         title: "Databáze (Postgres) + migrace",
-        amountCzk: 40_000,
+        amountCzk: 44_000,
         includes: [
-          "Návrh schématu (uživatelé, role, produkty, ceny, objednávky, provize, trezor)",
-          "Migrace + seed (MVP)",
-          "Indexy + základní performance",
+          "Schéma podle domén (uživatelé, produkty, objednávky, investice, affiliate, trezor, banka)",
+          "Migrace + seed pro vývoj a demo",
+          "Indexy a základní výkon (ať se neproboríme až na konci)",
+        ],
+      },
+      {
+        id: "backend",
+        title: "Backend + API (Node.js) — jádro systému",
+        amountCzk: 132_000,
+        includes: [
+          "REST API napříč doménami; kontrakty držíme čitelné pro FE i pro vás",
+          "Byznys pravidla, validace, stavy — nejen „CRUD přes HTTP“",
+          "RBAC, audit citlivých akcí, základ notifikací a exportů",
+        ],
+      },
+      {
+        id: "frontend",
+        title: "Frontend (Next.js) — všechny povrchy",
+        amountCzk: 114_000,
+        includes: [
+          "Marketing + eshop + admin + klient + affiliate jako propojená aplikace",
+          "Formuláře, stavy načítání, chybové stavy (to často zabere víc než „happy path“)",
+          "OAuth obrazovky v MVP podobě",
         ],
       },
       {
         id: "integrations",
-        title: "Integrace (MVP)",
-        amountCzk: 60_000,
+        title: "Integrace (MVP) — zvlášť, ať je vidět složitost",
+        amountCzk: 54_000,
         includes: [
-          "Tržní ceny (import + historie)",
-          "Email (transakční) – základní integrace a odesílání; dodavatel zajišťuje službu, klient dodá doménu/DNS pokud je potřeba",
-          "Exporty/reporty (CSV/PDF dle scope)",
-          "Google OAuth (přihlášení) – konfigurace + integrace",
-          "Fio bank API – načtení transakcí + základní párování (MVP)",
+          "Tržní ceny: import + historie",
+          "Transakční e‑mail; dodavatel službu, vy doménu/DNS dle potřeby",
+          "Google OAuth: konfigurace + propojení s účty",
+          "Fio: sync transakcí + základní párování (pravidla doladíme ve fázi 0)",
         ],
       },
       {
         id: "security",
-        title: "Bezpečnost + compliance základ",
-        amountCzk: 30_000,
+        title: "Bezpečnost (nad rámec „máme login“)",
+        amountCzk: 34_000,
         includes: [
-          "Hashování hesel, session/JWT strategie",
-          "Ochrana API (rate-limit, validace vstupů – základ)",
-          "Audit logy klíčových operací",
-          "OAuth bezpečnostní zásady (redirect URIs, token handling)",
+          "Hesla, session/JWT, základní hardening API",
+          "Rate limit a vstupní validace tam, kde to bolí",
+          "OAuth bezpečně (redirect URI, token handling)",
         ],
       },
       {
         id: "qa",
-        title: "Testování + UAT podpora",
-        amountCzk: 20_000,
+        title: "Testování, UAT, stabilizace",
+        amountCzk: 24_000,
         includes: [
-          "Testování klíčových flow (smoke/regrese)",
-          "UAT podpora a fixy v rámci MVP",
-          "Předání checklistu pro akceptaci",
+          "Smoke a regrese klíčových flow před každým větším milníkem",
+          "UAT s vámi: checklist, rozlišení blokující vs. neblokující",
+          "Fixy v rámci MVP, ne až „nekonečný patch backlog“",
         ],
       },
       {
         id: "devops",
-        title: "DevOps (základ)",
-        amountCzk: 15_000,
+        title: "DevOps + předání prostředí",
+        amountCzk: 10_000,
         includes: [
-          "CI build + lint",
-          "Základní env proměnné a konfigurace",
-          "Instrukce pro nasazení (Vercel / statika)",
-          "Hosting OVHcloud: konfigurace prostředí a nasazení (dle přístupů)",
-          "Databáze: provisioning, přístupy, zálohy/retence – dle dohodnutého plánu",
-          "Email: DNS (SPF/DKIM/DMARC) checklist + ověření odesílání (klient zajišťuje doménu/DNS, dodavatel službu)",
-        ],
-      },
-      {
-        id: "pm",
-        title: "Projektové řízení",
-        amountCzk: 5_000,
-        includes: [
-          "Plánování sprintů (MVP)",
-          "Statusy a prioritizace",
-          "Koordinace akceptace",
+          "CI (build, lint), env šablony, stručný runbook nasazení",
+          "OVHcloud: základní konfigurace dle přístupů; DB přístupy a zálohy dle dohody",
+          "E‑mail: checklist SPF/DKIM/DMARC + ověření odesílání (DNS typicky u vás)",
         ],
       },
     ] satisfies BreakdownItem[],
