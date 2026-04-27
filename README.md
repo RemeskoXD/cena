@@ -1,4 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cenová nabídka (web)
+
+Jednostránkový web s detailní cenovou nabídkou pro zákazníka.
+
+- **Cena**: 520 000 Kč bez DPH
+- **Rozpad**: dle modulů i dle technických vrstev
+- **Součást**: přehled API, harmonogram, předpoklady/mimo scope
+- **Stack**: Next.js (App Router) + Tailwind
+
+## Spuštění
+
+```bash
+npm install
+npm run dev
+```
+
+Otevřete `http://localhost:3000`.
+
+## Produkční build
+
+```bash
+npm run build
+npm run start
+```
+
+## Úpravy obsahu
+
+Všechny položky (částky, moduly, API skupiny, harmonogram) jsou v jednom souboru:
+
+- `app/content/offer.ts`
+
+Po změně částek se na stránce automaticky zkontroluje součet proti cílové ceně.
 
 ## Getting Started
 
