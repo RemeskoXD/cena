@@ -102,7 +102,7 @@ export default function Home() {
         <Section
           id="rozpad"
           title="Rozpad ceny"
-          subtitle="Nahoře přepínač: moduly = produktové bloky dle sitmapy, vrstvy = fáze od specifikace k předání. Pod ním se mění i podrobný řádkový rozklad (růžový blok). Oba výřezy i všechny karty sčítají na 520 000 Kč."
+          subtitle="Nahoře přepínač: moduly = produktové bloky dle sitmapy, vrstvy = fáze od specifikace k předání. Pod ním se mění i podrobný řádkový rozklad (modře zvýrazněný blok). Oba výřezy i všechny karty sčítají na 520 000 Kč."
         >
           <Breakdown />
         </Section>

@@ -41,10 +41,10 @@ export function DetailedBreakdown({ mode }: { mode: BreakdownDetailMode }) {
   return (
     <div
       id="rozpad-radky"
-      className="mt-10 scroll-mt-24 border-l-4 border-rose-500/90 pl-5 print:border-zinc-400 print:bg-white dark:border-rose-400/90"
+      className="mt-10 scroll-mt-24 border-l-4 border-blue-600 pl-5 print:border-zinc-400 print:bg-white dark:border-sky-400"
       aria-labelledby="detailed-breakdown-title"
     >
-      <div className="max-w-3xl rounded-r-2xl border border-rose-200/60 bg-rose-50/40 p-4 print:border-zinc-300 print:bg-zinc-50 dark:border-rose-900/50 dark:bg-rose-950/20">
+      <div className="max-w-3xl rounded-r-2xl border border-blue-200/80 bg-blue-50/60 p-4 print:border-zinc-300 print:bg-zinc-50 dark:border-sky-800/40 dark:bg-sky-950/35">
         <h3
           id="detailed-breakdown-title"
           className="text-lg font-semibold text-zinc-950 dark:text-zinc-50"
@@ -106,7 +106,7 @@ export function DetailedBreakdown({ mode }: { mode: BreakdownDetailMode }) {
                     <span className="text-sm text-zinc-700 dark:text-zinc-200">
                       {it.label}
                     </span>
-                    <span className="shrink-0 text-sm font-medium tabular-nums text-rose-700 dark:text-rose-300/95 sm:text-right">
+                    <span className="shrink-0 text-sm font-medium tabular-nums text-blue-800 dark:text-sky-300 sm:text-right">
                       cca {formatCzk(it.amountCzk)}
                     </span>
                   </li>
